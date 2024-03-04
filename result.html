@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kết Quả Bài Thi</title>
+<style>
+/* CSS cho giao diện */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+.score {
+    text-align: center;
+    font-size: 24px;
+}
+
+.answer-section {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.answer {
+    margin-bottom: 10px;
+}
+
+.correct-answer {
+    color: green;
+}
+
+.incorrect-answer {
+    color: red;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Kết Quả Bài Thi</h1>
+    <div class="score" id="score"></div>
+    <div class="answer-section" id="answer-section">
+        <!-- Đây là nơi hiển thị câu hỏi và câu trả lời -->
+    </div>
+    <button onclick="showCorrectAnswers()">Xem đáp án</button>
+</div>
+
+<script>
+// Dữ liệu câu hỏi và câu trả lời (fix dữ liệu)
+const questions = [
+    { question: "Câu 1: 2 + 2 bằng mấy?", answer: "B" },
+    { question: "Câu 2: Ai là người đầu tiên đặt chân lên mặt trăng?", answer: "A" },
+    { question: "Câu 3: Đâu là động vật có hình dáng giống con người?", answer: "C" },
+    // Thêm câu hỏi khác nếu cần
+];
+
+const userAnswers = ["B", "A", "C"]; // Các câu trả lời của người dùng
+
+// Tính điểm số và hiển thị kết quả
+function calculateScore() {
+    let correctAnswers = 0;
+    const answerSection = document.getElementById("answer-section");
+    const scoreElement = document.getElementById("score");
+
+    questions.forEach((question, index) => {
+        const userAnswer = userAnswers[index];
+        const isCorrect = userAnswer === question.answer;
+        const answerDiv = document.createElement("div");
+        answerDiv.classList.add("answer");
+        answerDiv.innerHTML = `<span>${question.question}</span>`;
+
+        if (isCorrect) {
+            answerDiv.innerHTML += `<span class="correct-answer"> - Đúng</span>`;
+            correctAnswers++;
+        } else {
+            answerDiv.innerHTML += `<span class="incorrect-answer"> - Sai. Đáp án đúng: ${question.answer}</span>`;
+        }
+
+        answerSection.appendChild(answerDiv);
+    });
+
+    const totalQuestions = questions.length;
+    const scorePercentage = (correctAnswers / totalQuestions) * 100;
+    scoreElement.textContent = `Số câu trả lời đúng: ${correctAnswers}/${totalQuestions}. Điểm số: ${scorePercentage.toFixed(2)}/100`;
+}
+
+// Hiển thị đáp án đúng
+function showCorrectAnswers() {
+    const answerSection = document.getElementById("answer-section");
+    answerSection.innerHTML = ""; // Xóa nội dung cũ trước khi hiển thị lại
+
+    questions.forEach((question, index) => {
+        const answerDiv = document.createElement("div");
+        answerDiv.classList.add("answer");
+        answerDiv.innerHTML = `<span>${question.question}</span>`;
+        answerDiv.innerHTML += `<span class="correct-answer"> - Đáp án đúng: ${question.answer}</span>`;
+        answerSection.appendChild(answerDiv);
+    });
+}
+
+// Gọi hàm tính điểm số và hiển thị kết quả
+calculateScore();
+</script>
+</body>
+</html>
+`

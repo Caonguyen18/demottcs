@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thi Trắc Nghiệm</title>
+<style>
+/* CSS cho giao diện */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background-color: rgb(222, 10, 10);
+    color: rgb(236, 228, 228);
+}
+
+.inheader {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.question {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.choices {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.choice {
+    margin: 0 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.choice:hover {
+    background-color: #0056b3;
+}
+
+.timer {
+    font-size: 24px;
+    margin-top: 20px;
+    border: #000200;
+
+}
+
+#submit-btn {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#submit-btn:hover {
+    background-color: #218838;
+}
+
+.message {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+#logo{
+    width: auto;
+    height: 100%;
+}
+
+</style>
+</head>
+<body>
+<div class="header">
+    <img  scr="https://code.ptit.edu.vn/2020/images/logo_ptit.png" alt="Logo PTIT" id="logo">
+    <div class="inheader">    
+        <h1>Thi Trắc Nghiệm</h1>
+        <div class="timer" id="timer"></div>
+        <button id="submit-btn">Nộp bài</button>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="question" id="question"></div>
+    <div class="choices" id="choices"></div>
+    <div class="message" id="message"></div>
+</div>
+
+<script>
+// Dữ liệu câu hỏi và lựa chọn (fix dữ liệu)
+const questions = [
+    {
+        question: "Câu 1: 2 + 2 bằng mấy?",
+        choices: ["A) 3", "B) 4", "C) 5"],
+        answer: "B"
+    },
+    {
+        question: "Câu 2: Ai là người đầu tiên đặt chân lên mặt trăng?",
+        choices: ["A) Neil Armstrong", "B) Buzz Aldrin", "C) Yuri Gagarin"],
+        answer: "A"
+    },
+    // Thêm các câu hỏi khác...
+    //...
+];
+
+const totalTimeInSeconds = 1800; // Thời gian thi trong giây
+
+let currentQuestionIndex = 0;
+let timeRemaining = totalTimeInSeconds;
+let timerInterval;
+
+const questionElement = document.getElementById("question");
+const choicesElement = document.getElementById("choices");
+const timerElement = document.getElementById("timer");
+const submitButton = document.getElementById("submit-btn");
+const messageElement = document.getElementById("message");
+
+// Hiển thị câu hỏi và lựa chọn
+function displayQuestion() {
+    const currentQuestion = questions[currentQuestionIndex];
+    questionElement.textContent = currentQuestion.question;
+
+    choicesElement.innerHTML = "";
+    currentQuestion.choices.forEach(choice => {
+        const choiceButton = document.createElement("button");
+        choiceButton.textContent = choice;
+        choiceButton.classList.add("choice");
+        choiceButton.addEventListener("click", () => selectAnswer(choice));
+        choicesElement.appendChild(choiceButton);
+    });
+}
+
+// Chọn câu trả lời
+function selectAnswer(choice) {
+    const currentQuestion = questions[currentQuestionIndex];
+    setTimeout(() => {
+        messageElement.textContent = "";
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            displayQuestion();
+        } else {
+            endQuiz();
+        }
+    }, 1000);
+}
+
+// Bắt đầu bộ đếm thời gian
+function startTimer() {
+    timerInterval = setInterval(() => {
+        timeRemaining--;
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);   
+            endQuiz();
+        } else {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+    }, 1000);
+}
+
+// Kết thúc bài thi
+function endQuiz() {
+    clearInterval(timerInterval);
+    submitButton.disabled = true;
+    messageElement.textContent = "Bài thi đã kết thúc.";
+    window.location.href = 'result.html';
+}
+
+// Sự kiện khi nhấn nút "Nộp bài"
+submitButton.addEventListener("click", endQuiz);
+
+// Bắt đầu hiển thị câu hỏi và bộ đếm thời gian
+displayQuestion();
+startTimer();
+</script>
+</body>
+</html>
